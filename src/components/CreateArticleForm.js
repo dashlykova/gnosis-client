@@ -8,12 +8,14 @@ class CreateArticleForm extends Component {
     author: "",
     title: "",
     body: "",
+    city: "",
     articleSaved: false
   };
 
   async saveArticleHandler(e) {
     e.preventDefault();
     let response = await saveArticle(
+      this.state.city,
       this.state.author,
       this.state.title,
       this.state.body
@@ -40,6 +42,14 @@ class CreateArticleForm extends Component {
                 id="create-article-form"
                 onSubmit={e => this.saveArticleHandler(e)}
               >
+                   <Form.Field>
+                  <label>City</label>
+                  <input
+                    id="city"
+                    value={this.state.city}
+                    onChange={e => this.setState({ city: e.target.value })}
+                  />
+                </Form.Field>
                 <Form.Field>
                   <label>Author</label>
                   <input

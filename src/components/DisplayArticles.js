@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import axios from "axios";
 import ArticleTemplate from "./ArticleTemplate";
 import { Container } from "semantic-ui-react";
+import { connect } from 'react-redux'
+
 
 class DisplayArticles extends Component {
   state = {
-    articles: []
+    articles: [],
   };
 
   componentDidMount() {
@@ -16,7 +18,7 @@ class DisplayArticles extends Component {
     const response = await axios.get("/articles");
     if (response.data.length > 0) {
       this.setState({
-        articles: response.data
+        articles: response.data,
       });
     }
   }
@@ -27,20 +29,21 @@ class DisplayArticles extends Component {
       this.state.articles.map(article => {
         return <ArticleTemplate key={article.id} article={article} />;
       });
-    
-    // TODO - Add function to map articles by city
-    // const articlesDisplayCity =
-    //   this.state.articles.length > 0 && this.state.articles.city === 
-    //   this.state.articles.map(article => {
-    //     return <ArticleTemplate key={article.id} article={article} />;
-    //   });
+  
 
+      // Something like this
+      
+  //   const articleCityDisplay =
+  //     this.state.articles.city.forEach(article => {
+  //     if (this.state.article.city === this.state.position.coords) {
+  //       return <ArticleTemplate key={article.id} article={article} />
+  //     )}
+  // }
     return (
       <>
         <Container>
           <p>
-            <h3 id="local-research">Local Research in your Area</h3>
-            {/* {articlesDisplayCity} */}
+            {/* {articleCityDisplay} */}
           </p>
           {articlesDisplay ? (
             articlesDisplay
@@ -55,4 +58,11 @@ class DisplayArticles extends Component {
   }
 }
 
-export default DisplayArticles;
+const mapStateToProps = (state) => {
+  return {
+    state: state
+  }
+}
+
+export default (connect(
+  mapStateToProps)(DisplayArticles))

@@ -1,20 +1,21 @@
 import axios from "axios";
 
-const saveArticle = async (city, author, title, body) => {
+const saveLocation = async (location) => {
   try {
+
     let response = await axios.post("/articles", {
+      
       data: {
-        city: city,
-        author: author,
-        title: title,
-        body: body
+          location: location
       }
     });
+
+  
     return response;
+    
   } catch (error) {
     return error.response;
   }
 };
 
-export { saveArticle };
-  
+export default saveLocation;

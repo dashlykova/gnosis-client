@@ -4,26 +4,43 @@ import { Container, Menu } from "semantic-ui-react";
 import "../styling/Navbar.css";
 import AlertMessage from "./AlertMessage";
 import { connect } from "react-redux";
-import convertToDMS from "../modules/convertDMS";
 import getAddress from "../modules/openCageWrapper";
+import saveLocation from "../modules/saveLocation"
 
 class NavBar extends Component {
-  state = { activeItem: "latest news", city: "", position: {} };
+  state = { activeItem: "latest news", city: "", position: {}, locationSaved: false };
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(position => {
       this.setState({ position: position }, () => {
-        this.fetchAddress();
+        this.getAddress();
       });
     });
   }
 
-  async fetchAddress() {
+  async getAddress() {
     let address = await getAddress(
       this.state.position.coords.latitude,
       this.state.position.coords.longitude
     );
+    console.log(getAddress)
     this.setState({ city: address.components.city });
+    this.postAdress();
+  }
+
+  async postAdress(){
+    let response = await saveLocation(
+      this.state.city
+);
+    debugger;
+    if (response.status === 200) {
+      debugger;
+      this.setState({
+        locationSaved: true
+      });
+    } else {
+      return response.error
+    }
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
@@ -49,7 +66,7 @@ class NavBar extends Component {
     }
 
     if (
-      this.props.currentUser.attributes.role === "University" &&
+      this.props.currentUser.attributes.role === "university" &&
       this.props.currentUser.attributes.subscriber === false
     ) {
       subscribeButton = (
