@@ -4,44 +4,12 @@ import { Container, Menu } from "semantic-ui-react";
 import "../styling/Navbar.css";
 import AlertMessage from "./AlertMessage";
 import { connect } from "react-redux";
-import getAddress from "../modules/openCageWrapper";
-import saveLocation from "../modules/saveLocation"
 
 class NavBar extends Component {
-  state = { activeItem: "latest news", city: "", position: {}, locationSaved: false };
-
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(position => {
-      this.setState({ position: position }, () => {
-        this.getAddress();
-      });
-    });
-  }
-
-  async getAddress() {
-    let address = await getAddress(
-      this.state.position.coords.latitude,
-      this.state.position.coords.longitude
-    );
-    console.log(getAddress)
-    this.setState({ city: address.components.city });
-    this.postAdress();
-  }
-
-  async postAdress(){
-    let response = await saveLocation(
-      this.state.city
-);
-    debugger;
-    if (response.status === 200) {
-      debugger;
-      this.setState({
-        locationSaved: true
-      });
-    } else {
-      return response.error
-    }
-  }
+  state = { 
+    activeItem: "latest news", 
+    localArticles: []
+  };
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
@@ -52,6 +20,7 @@ class NavBar extends Component {
     let loginActions;
 
     const { activeItem } = this.state;
+
 
     if (this.props.showFlash === true) {
       flashMessage = <AlertMessage />;
@@ -119,14 +88,6 @@ class NavBar extends Component {
                 />
               </Menu>
             </div>
-            {this.state.position.coords ? (
-              <Menu.Item id="location">
-                Location: {this.state.city}
-              </Menu.Item>
-            ) : (
-              ""
-            )}
-
             <Menu.Menu position="right">
               {createArticleButton}
               {subscribeButton}
